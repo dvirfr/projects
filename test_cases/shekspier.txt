@@ -1,0 +1,108 @@
+The phrase regular expressions, and consequently, regexes, is often used to mean the specific, standard textual syntax (distinct from the mathematical notation described below) for representing patterns for matching text. Each character in a regular expression (that is, each character in the string describing its pattern) is either a metacharacter, having a special meaning, or a regular character that has a literal meaning. For example, in the regex a., a is a literal character which matches just 'a', while '.' is a meta character that matches every character except a newline. Therefore, this regex matches, for example, 'a ', or 'ax', or 'a0'. Together, metacharacters and literal characters can be used to identify text of a given pattern, or process a number of instances of it. Pattern matches may vary from a precise equality to a very general similarity, as controlled by the metacharacters. For example, . is a very general pattern, [a-z] (match all lower case letters from 'a' to 'z') is less general and a is a precise pattern (matches just 'a'). The metacharacter syntax is designed specifically to represent prescribed targets in a concise and flexible way to direct the automation of text processing of a variety of input data, in a form easy to type using a standard ASCII keyboard.
+
+A very simple case of a regular expression in this syntax is to locate a word spelled two different ways in a text editor, the regular expression seriali[sz]e matches both "serialise" and "serialize". Wildcards also achieve this, but are more limited in what they can pattern, as they have fewer metacharacters and a simple language-base.
+
+The usual context of wildcard characters is in globbing similar names in a list of files, whereas regexes are usually employed in applications that pattern-match text strings in general. For example, the regex ^[ \t]+|[ \t]+$ matches excess whitespace at the beginning or end of a line. An advanced regular expression that matches any numeral is [+-]?(\d+(\.\d+)?|\.\d+)([eE][+-]?\d+)?.
+
+
+Translating the Kleene star
+(s* means 'zero or more of s ')
+A regex processor translates a regular expression in the above syntax into an internal representation which can be executed and matched against a string representing the text being searched in. One possible approach is the Thompson's construction algorithm to construct a nondeterministic finite automaton (NFA), which is then made deterministic and the resulting deterministic finite automaton (DFA) is run on the target text string to recognize substrings that match the regular expression. The picture shows the NFA scheme N(s*) obtained from the regular expression s*, where s denotes a simpler regular expression in turn, which has already been recursively translated to the NFA N(s).
+
+History
+Regular expressions originated in 1951, when mathematician Stephen Cole Kleene described regular languages using his mathematical notation called regular events.[4][5] These arose in theoretical computer science, in the subfields of automata theory (models of computation) and the description and classification of formal languages. Other early implementations of pattern matching include the SNOBOL language, which did not use regular expressions, but instead its own pattern matching constructs.
+
+Regular expressions entered popular use from 1968 in two uses: pattern matching in a text editor[6] and lexical analysis in a compiler.[7] Among the first appearances of regular expressions in program form was when Ken Thompson built Kleene's notation into the editor QED as a means to match patterns in text files.[6][8][9][10] For speed, Thompson implemented regular expression matching by just-in-time compilation (JIT) to IBM 7094 code on the Compatible Time-Sharing System, an important early example of JIT compilation.[11] He later added this capability to the Unix editor ed, which eventually led to the popular search tool grep's use of regular expressions ("grep" is a word derived from the command for regular expression searching in the ed editor: g/re/p meaning "Global search for Regular Expression and Print matching lines"[12]). Around the same time when Thompson developed QED, a group of researchers including Douglas T. Ross implemented a tool based on regular expressions that is used for lexical analysis in compiler design.[7]
+
+Many variations of these original forms of regular expressions were used in Unix[10] programs at Bell Labs in the 1970s, including vi, lex, sed, AWK, and expr, and in other programs such as Emacs. Regexes were subsequently adopted by a wide range of programs, with these early forms standardized in the POSIX.2 standard in 1992.
+
+In the 1980s the more complicated regexes arose in Perl, which originally derived from a regex library written by Henry Spencer (1986), who later wrote an implementation of Advanced Regular Expressions for Tcl.[13] The Tcl library is a hybrid NFA/DFA implementation with improved performance characteristics. Software projects that have adopted Spencer's Tcl regular expression implementation include PostgreSQL.[14] Perl later expanded on Spencer's original library to add many new features.[15] Part of the effort in the design of Perl 6 is to improve Perl's regex integration, and to increase their scope and capabilities to allow the definition of parsing expression grammars.[16] The result is a mini-language called Perl 6 rules, which are used to define Perl 6 grammar as well as provide a tool to programmers in the language. These rules maintain existing features of Perl 5.x regexes, but also allow BNF-style definition of a recursive descent parser via sub-rules.
+
+The use of regexes in structured information standards for document and database modeling started in the 1960s and expanded in the 1980s when industry standards like ISO SGML (precursored by ANSI "GCA 101-1983") consolidated. The kernel of the structure specification language standards consists of regexes. Its use is evident in the DTD element group syntax.
+
+Starting in 1997, Philip Hazel developed PCRE (Perl Compatible Regular Expressions), which attempts to closely mimic Perl's regex functionality and is used by many modern tools including PHP and Apache HTTP Server.
+
+Today, regexes are widely supported in programming languages, text processing programs (particularly lexers), advanced text editors, and some other programs. Regex support is part of the standard library of many programming languages, including Java and Python, and is built into the syntax of others, including Perl and ECMAScript. Implementations of regex functionality is often called a regex engine, and a number of libraries are available for reuse.
+
+Basic concepts
+A regular expression, often called a pattern, is an expression used to specify a set of strings required for a particular purpose. A simple way to specify a finite set of strings is to list its elements or members. However, there are often more concise ways to specify the desired set of strings. For example, the set containing the three strings "Handel", "Händel", and "Haendel" can be specified by the pattern H(ä|ae?)ndel; we say that this pattern matches each of the three strings. In most formalisms, if there exists at least one regular expression that matches a particular set then there exists an infinite number of other regular expressions that also match it—the specification is not unique. Most formalisms provide the following operations to construct regular expressions.
+
+Boolean "or"
+A vertical bar separates alternatives. For example, gray|grey can match "gray" or "grey".
+Grouping
+Parentheses are used to define the scope and precedence of the operators (among other uses). For example, gray|grey and gr(a|e)y are equivalent patterns which both describe the set of "gray" or "grey".
+Quantification
+A quantifier after a token (such as a character) or group specifies how often that a preceding element is allowed to occur. The most common quantifiers are the question mark ?, the asterisk * (derived from the Kleene star), and the plus sign + (Kleene plus).
+?	The question mark indicates zero or one occurrences of the preceding element. For example, colou?r matches both "color" and "colour".
+*	The asterisk indicates zero or more occurrences of the preceding element. For example, ab*c matches "ac", "abc", "abbc", "abbbc", and so on.
++	The plus sign indicates one or more occurrences of the preceding element. For example, ab+c matches "abc", "abbc", "abbbc", and so on, but not "ac".
+{n}[17]	The preceding item is matched exactly n times.
+{min,}[17]	The preceding item is matched min or more times.
+{min,max}[17]	The preceding item is matched at least min times, but not more than max times.
+Wildcard
+The wildcard . matches any character. For example, a.b matches any string that contains an "a", then any other character and then a "b", a.*b matches any string that contains an "a" and a "b" at some later point.
+
+These constructions can be combined to form arbitrarily complex expressions, much like one can construct arithmetical expressions from numbers and the operations +, −, ×, and ÷. For example, H(ae?|ä)ndel and H(a|ae|ä)ndel are both valid patterns which match the same strings as the earlier example, H(ä|ae?)ndel.
+
+The precise syntax for regular expressions varies among tools and with context; more detail is given in the Syntax section.
+
+Formal language theory
+Regular expressions describe regular languages in formal language theory. They have the same expressive power as regular grammars.
+
+Formal definition
+Regular expressions consist of constants, which denote sets of strings, and operator symbols, which denote operations over these sets. The following definition is standard, and found as such in most textbooks on formal language theory.[18][19] Given a finite alphabet Σ, the following constants are defined as regular expressions:
+
+(empty set) ∅ denoting the set ∅.
+(empty string) ε denoting the set containing only the "empty" string, which has no characters at all.
+(literal character) a in Σ denoting the set containing only the character a.
+Given regular expressions R and S, the following operations over them are defined to produce regular expressions:
+
+(concatenation) RS denotes the set of strings that can be obtained by concatenating a string in R and a string in S. For example, let R = {"ab", "c"}, and S = {"d", "ef"}. Then, RS = {"abd", "abef", "cd", "cef"}.
+(alternation) R | S denotes the set union of sets described by R and S. For example, if R describes {"ab", "c"} and S describes {"ab", "d", "ef"}, expression R | S describes {"ab", "c", "d", "ef"}.
+(Kleene star) R* denotes the smallest superset of the set described by R that contains ε and is closed under string concatenation. This is the set of all strings that can be made by concatenating any finite number (including zero) of strings from the set described by R. For example, {"0","1"}* is the set of all finite binary strings (including the empty string), and {"ab", "c"}* = {ε, "ab", "c", "abab", "abc", "cab", "cc", "ababab", "abcab", ... }.
+To avoid parentheses it is assumed that the Kleene star has the highest priority, then concatenation and then alternation. If there is no ambiguity then parentheses may be omitted. For example, (ab)c can be written as abc, and a|(b(c*)) can be written as a|bc*. Many textbooks use the symbols ∪, +, or ∨ for alternation instead of the vertical bar.
+
+Examples:
+
+a|b* denotes {ε, "a", "b", "bb", "bbb", ...}
+(a|b)* denotes the set of all strings with no symbols other than "a" and "b", including the empty string: {ε, "a", "b", "aa", "ab", "ba", "bb", "aaa", ...}
+ab*(c|ε) denotes the set of strings starting with "a", then zero or more "b"s and finally optionally a "c": {"a", "ac", "ab", "abc", "abb", "abbc", ...}
+(0|(1(01*0)*1))* denotes the set of binary numbers that are multiples of 3: { ε, "0", "00", "11", "000", "011", "110", "0000", "0011", "0110", "1001", "1100", "1111", "00000", ... }
+Expressive power and compactness
+The formal definition of regular expressions is minimal on purpose, and avoids defining ? and +—these can can be expressed as follows: a+ = aa*, and a? = (a|ε). Sometimes the complement operator is added, to give a generalized regular expression; here Rc matches all strings over Σ* that do not match R. In principle, the complement operator is redundant, because it doesn't grant any more expressive power. However, it can make a regular expression much more concise—eliminating all complement operators from a regular expression can cause a double exponentially blow-up of its length.[20][21]
+
+Regular expressions in this sense can express the regular languages, exactly the class of languages accepted by deterministic finite automata. There is, however, a significant difference in compactness. Some classes of regular languages can only be described by deterministic finite automata whose size grows exponentially in the size of the shortest equivalent regular expressions. The standard example here is the languages Lk consisting of all strings over the alphabet {a,b} whose kth-from-last letter equals a. On one hand, a regular expression describing L4 is given by {\displaystyle (a\mid b)^{*}a(a\mid b)(a\mid b)(a\mid b)}(a\mid b)^{*}a(a\mid b)(a\mid b)(a\mid b).
+
+Generalizing this pattern to Lk gives the expression: {\displaystyle (a\mid b)^{*}a\underbrace {(a\mid b)(a\mid b)\cdots (a\mid b)} _{k-1{\text{ times}}}.\,}(a\mid b)^{*}a\underbrace {(a\mid b)(a\mid b)\cdots (a\mid b)} _{k-1{\text{ times}}}.\,
+
+On the other hand, it is known that every deterministic finite automaton accepting the language Lk must have at least 2k states. Luckily, there is a simple mapping from regular expressions to the more general nondeterministic finite automata (NFAs) that does not lead to such a blowup in size; for this reason NFAs are often used as alternative representations of regular languages. NFAs are a simple variation of the type-3 grammars of the Chomsky hierarchy.[18]
+
+In the opposite direction, there are many languages easily described by a DFA that are not easily described a regular expression. For instance, determining the validity of a given ISBN requires computing the modulus of the integer base 11, and can be easily implemented with an 11-state DFA. However, a regular expression to answer the same problem of divisibility by 11 is at least multiple megabytes in length.[citation needed]
+
+Given a regular expression, Thompson's construction algorithm computes an equivalent nondeterministic finite automaton. A conversion in the opposite direction is achieved by Kleene's algorithm.
+
+Finally, it is worth noting that many real-world "regular expression" engines implement features that cannot be described by the regular expressions in the sense of formal language theory; rather, they implement regexes. See below for more on this.
+
+Deciding equivalence of regular expressions
+As seen in many of the examples above, there is more than one way to construct a regular expression to achieve the same results.
+
+It is possible to write an algorithm that, for two given regular expressions, decides whether the described languages are equal; the algorithm reduces each expression to a minimal deterministic finite state machine, and determines whether they are isomorphic (equivalent).
+
+Algebraic laws for regular expressions can be obtained using a method by Gischer which is best explained along an example: In order to check whether (X+Y)* and (X* Y*)* denote the same regular language, for all regular expressions X, Y, it is necessary and sufficient to check whether the particular regular expressions (a+b)* and (a* b*)* denote the same language over the alphabet Σ={a,b}. More generally, an equation E=F between regular-expression terms with variables holds if, and only if, its instantiation with different variables replaced by different symbol constants holds.[22][23]
+
+The redundancy can be eliminated by using Kleene star and set union to find an interesting subset of regular expressions that is still fully expressive, but perhaps their use can be restricted.[clarification needed] This is a surprisingly difficult problem. As simple as the regular expressions are, there is no method to systematically rewrite them to some normal form. The lack of axiom in the past led to the star height problem. In 1991, Dexter Kozen axiomatized regular expressions as a Kleene algebra, using equational and Horn clause axioms.[24] Already in 1964, Redko had proved that no finite set of purely equational axioms can characterize the algebra of regular languages.[25]
+
+Syntax
+A regex pattern matches a target string. The pattern is composed of a sequence of atoms. An atom is a single point within the regex pattern which it tries to match to the target string. The simplest atom is a literal, but grouping parts of the pattern to match an atom will require using ( ) as metacharacters. Metacharacters help form: atoms; quantifiers telling how many atoms (and whether it is a greedy quantifier or not); a logical OR character, which offers a set of alternatives, and a logical NOT character, which negates an atom's existence; and backreferences to refer to previous atoms of a completing pattern of atoms. A match is made, not when all the atoms of the string are matched, but rather when all the pattern atoms in the regex have matched. The idea is to make a small pattern of characters stand for a large number of possible strings, rather than compiling a large list of all the literal possibilities.
+
+Depending on the regex processor there are about fourteen metacharacters, characters that may or may not have their literal character meaning, depending on context, or whether they are "escaped", i.e. preceded by an escape sequence, in this case, the backslash \. Modern and POSIX extended regexes use metacharacters more often than their literal meaning, so to avoid "backslash-osis" or leaning toothpick syndrome it makes sense to have a metacharacter escape to a literal mode; but starting out, it makes more sense to have the four bracketing metacharacters ( ) and { } be primarily literal, and "escape" this usual meaning to become metacharacters. Common standards implement both. The usual metacharacters are {}[]()^$.|*+? and \. The usual characters that become metacharacters when escaped are dswDSW and N.
+
+Delimiters
+When entering a regex in a programming language, they may be represented as a usual string literal, hence usually quoted; this is common in C, Java, and Python for instance, where the regex re is entered as "re". However, they are often written with slashes as delimiters, as in /re/ for the regex re. This originates in ed, where / is the editor command for searching, and an expression /re/ can be used to specify a range of lines (matching the pattern), which can be combined with other commands on either side, most famously g/re/p as in grep ("global regex print"), which is included in most Unix-based operating systems, such as Linux distributions. A similar convention is used in sed, where search and replace is given by s/re/replacement/ and patterns can be joined with a comma to specify a range of lines as in /re1/,/re2/. This notation is particularly well known due to its use in Perl, where it forms part of the syntax distinct from normal string literals. In some cases, such as sed and Perl, alternative delimiters can be used to avoid collision with contents, and to avoid having to escape occurrences of the delimiter character in the contents. For example, in sed the command s,/,X, will replace a / with an X, using commas as delimiters.
+
+Standards
+The IEEE POSIX standard has three sets of compliance: BRE (Basic Regular Expressions),[26] ERE (Extended Regular Expressions), and SRE (Simple Regular Expressions). SRE is deprecated,[27] in favor of BRE, as both provide backward compatibility. The subsection below covering the character classes applies to both BRE and ERE.
+
+BRE and ERE work together. ERE adds ?, +, and |, and it removes the need to escape the metacharacters ( ) and { }, which are required in BRE. Furthermore, as long as the POSIX standard syntax for regexes is adhered to, there can be, and often is, additional syntax to serve specific (yet POSIX compliant) applications. Although POSIX.2 leaves some implementation specifics undefined, BRE and ERE provide a "standard" which has since been adopted as the default syntax of many tools, where the choice of BRE or ERE modes is usually a supported option. For example, GNU grep has the following options: "grep -E" for ERE, and "grep -G" for BRE (the default), and "grep -P" for Perl regexes.
+
+Perl regexes have become a de facto standard, having a rich and powerful set of atomic expressions. Perl has no "basic" or "extended" levels. As in POSIX EREs, ( ) and { } are treated as metacharacters unless escaped; other metacharacters are known to be literal or symbolic based on context alone. Additional functionality includes lazy matching, backtracking, named capture groups, and recursive patterns.
