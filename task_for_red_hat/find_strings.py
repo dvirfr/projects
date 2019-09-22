@@ -45,6 +45,20 @@ def find_and_color(files_path, line_search):
     return print("")
 
 
+def find_and_underline():
+    return_dict = finds_string_in_files(files_path, line_search)
+    for key, value in return_dict.items():
+        line_search = line_search.lower()
+        if line_search in value:
+            if line_search in value.lower():
+                change = Colour.UNDERLINE + line_search + Colour.END
+                replace = value.replace(line_search, change)
+                return_dict[key] = replace
+                print("Found a match on line %s: %s" % (key, replace))
+
+    return print("")
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-r", "--regex", required=True, type=str,
                     help="Write the word or strings you want to search for ")
@@ -52,13 +66,19 @@ parser.add_argument("-f", "--files", required=True, type=str,
                     help="Insert the path to the folder you want to search in")
 parser.add_argument("-c", "--color", action="store_true",
                     help="chose this option to highlight the word you are looking for")
+parser.add_argument("-u", "--underline", action="store_true",
+                    help="chose this option to put underline under the matching words")
+
 args = parser.parse_args()
+under = args.underline
 line_search = args.regex
 files_path = args.files
 color_result = args.color
 
 if color_result:
     print(find_and_color(files_path, line_search))
+elif under:
+    print(find_and_underline(files_path, line_search))
 else:
     run = finds_string_in_files(files_path, line_search)
     for k, v in run.items():
