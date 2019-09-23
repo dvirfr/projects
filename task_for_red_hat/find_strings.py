@@ -17,18 +17,23 @@ class Colour:
 
 
 def finds_string_in_files(files_path, line_search):
+    error_list =[]
     result_dict = {}
     s = line_search[0].upper() + '|' + line_search[0].lower()
     regex_word = '(.*)(%s)%s(.*)' % (s, line_search[1:])
     for r, d, f in os.walk(files_path):
-        for file in f:
-            os.chdir(files_path)
-            with open(file) as search:
-                for line_num, line in enumerate(search, 1):
-                    line = line.rstrip()
-                    if re.match(regex_word, line):
-                        result_dict[line_num] = line
-    return result_dict
+        try:
+            for file in f:
+                os.chdir(files_path)
+                with open(file) as search:
+                    for line_num, line in enumerate(search, 1):
+                        line = line.rstrip()
+                        if re.match(regex_word, line):
+                            result_dict[line_num] = line
+        except Exception as ex:
+            error_list.append(ex)
+            print(error_list)
+        return result_dict
 
 
 def find_and_color(files_path, line_search):
@@ -45,7 +50,7 @@ def find_and_color(files_path, line_search):
     return print("")
 
 
-def find_and_underline():
+def find_and_underline(files_path, line_search):
     return_dict = finds_string_in_files(files_path, line_search)
     for key, value in return_dict.items():
         line_search = line_search.lower()
@@ -55,7 +60,7 @@ def find_and_underline():
                 replace = value.replace(line_search, change)
                 return_dict[key] = replace
                 print("Found a match on line %s: %s" % (key, replace))
-
+                print(e)
     return print("")
 
 
