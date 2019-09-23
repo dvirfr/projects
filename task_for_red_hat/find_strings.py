@@ -60,7 +60,6 @@ def find_and_underline(files_path, line_search):
                 replace = value.replace(line_search, change)
                 return_dict[key] = replace
                 print("Found a match on line %s: %s" % (key, replace))
-                print(e)
     return print("")
 
 
